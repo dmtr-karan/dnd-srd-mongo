@@ -1,0 +1,41 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment & virtualenvs
+.venv/
+env/
+venv/
+*.conda
+*.egg-info/
+.env
+.env.*
+
+
+# Conda lock / temp files
+*.lock
+
+# Build / cache directories
+build/
+dist/
+.eggs/
+*.egg
+*.manifest
+*.spec
+*.log
+*.tmp
+
+# PyCharm / IDE
+.idea/
+.vscode/
+*.iml
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS junk
+.DS_Store
+Thumbs.db

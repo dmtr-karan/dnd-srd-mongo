@@ -1,0 +1,66 @@
+{
+  "name": "Fighter",
+  "srd_id": "class:fighter:srd-5-1",
+  "edition": "5e-2014",
+  "license": "CC-BY-4.0",
+  "source": {
+    "title": "System Reference Document 5.1",
+    "url": "https://dnd.wizards.com/resources/systems-reference-document",
+    "publisher": "Wizards of the Coast"
+  },
+
+  "hit_die": 10,
+  "primary_abilities": ["STR", "DEX"],
+  "saving_throw_proficiencies": ["STR", "CON"],
+
+  "proficiencies": {
+    "armor": ["Light", "Medium", "Heavy", "Shields"],
+    "weapons": ["Simple", "Martial"],
+    "tools": [],
+    "skills": {
+      "choose": 2,
+      "from": ["Acrobatics", "Animal Handling", "Athletics", "History", "Insight", "Intimidation", "Perception", "Survival"]
+    }
+  },
+
+  "spellcasting": {
+    "is_spellcaster": false,
+    "spellcasting_ability": null,
+    "progression_note": null,
+    "slots_by_level": null,
+    "cantrips_known_by_level": null
+  },
+
+  "features_by_level": [
+    {
+      "level": 1,
+      "features": [
+        {
+          "name": "Fighting Style",
+          "srd_feature_id": "fighter:fighting-style",
+          "description_md": "Choose one of the following fighting styles permitted by the SRD.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Second Wind",
+          "srd_feature_id": "fighter:second-wind",
+          "description_md": "You have a limited well of stamina that you can draw on to protect yourself.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "features": [
+        {
+          "name": "Action Surge",
+          "srd_feature_id": "fighter:action-surge",
+          "description_md": "On your turn, you can take one additional action.",
+          "source": "SRD 5.1"
+        }
+      ]
+    }
+  ],
+
+  "notes": "SRD excerpt only. Expanded options intentionally omitted."
+}

@@ -1,0 +1,57 @@
+{
+  "class": "Bard",
+  "source": "SRD 5.1",
+  "hit_die": "d8",
+  "primary_abilities": ["CHA"],
+  "proficiencies_overview": {
+    "armor": "Light armor",
+    "weapons": "Simple weapons, hand crossbows, longswords, rapiers, shortswords",
+    "tools": "Three musical instruments of your choice",
+    "saving_throws": ["DEX", "CHA"],
+    "skills_choose": 3
+  },
+  "spellcasting": true,
+  "spellcasting_ability": "CHA",
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Spellcasting", "slug": "bard-spellcasting", "srd": true, "notes": "SRD placeholder — prepare & cast bard spells; no full text here."},
+        {"name": "Bardic Inspiration (d6)", "slug": "bard-bardic-inspiration-d6", "srd": true, "notes": "SRD placeholder — inspire allies with dice pool (d6 at this level)."}
+      ]
+    },
+    {
+      "level": 2,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Jack of All Trades", "slug": "bard-jack-of-all-trades", "srd": true, "notes": "SRD placeholder — add half proficiency bonus to checks not already proficient."},
+        {"name": "Song of Rest (d6)", "slug": "bard-song-of-rest-d6", "srd": true, "notes": "SRD placeholder — allies regain extra hp during short rests."}
+      ]
+    },
+    {
+      "level": 3,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Bard College", "slug": "bard-college", "srd": true, "notes": "SRD placeholder — choose a subclass; details not included."},
+        {"name": "Expertise", "slug": "bard-expertise-1", "srd": true, "notes": "SRD placeholder — double proficiency in two skills."}
+      ]
+    },
+    {
+      "level": 4,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Ability Score Improvement", "slug": "bard-asi-1", "srd": true, "notes": "SRD placeholder — increase ability scores or take a feat."}
+      ]
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "features": [
+        {"name": "Bardic Inspiration (d8)", "slug": "bard-bardic-inspiration-d8", "srd": true, "notes": "SRD placeholder — inspiration dice improve to d8."},
+        {"name": "Font of Inspiration", "slug": "bard-font-of-inspiration", "srd": true, "notes": "SRD placeholder — regain Bardic Inspiration after a short/long rest."}
+      ]
+    }
+  ],
+  "notes": "Stub SRD-only bard data (levels 1–5). Feature texts intentionally omitted; placeholders only."
+}

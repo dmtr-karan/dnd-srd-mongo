@@ -1,0 +1,55 @@
+{
+  "class": "Barbarian",
+  "source": "SRD 5.1",
+  "hit_die": "d12",
+  "primary_abilities": ["STR", "CON"],
+  "proficiencies_overview": {
+    "armor": "Light armor, medium armor, shields",
+    "weapons": "Simple weapons, martial weapons",
+    "tools": "None",
+    "saving_throws": ["STR", "CON"],
+    "skills_choose": 2
+  },
+  "spellcasting": false,
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Rage", "slug": "barbarian-rage", "srd": true, "notes": "SRD placeholder — enter a rage a limited number of times."},
+        {"name": "Unarmored Defense", "slug": "barbarian-unarmored-defense", "srd": true, "notes": "SRD placeholder — AC = 10 + DEX + CON while not wearing armor."}
+      ]
+    },
+    {
+      "level": 2,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Reckless Attack", "slug": "barbarian-reckless-attack", "srd": true, "notes": "SRD placeholder — gain advantage on melee STR attacks; attacks vs you have advantage."},
+        {"name": "Danger Sense", "slug": "barbarian-danger-sense", "srd": true, "notes": "SRD placeholder — advantage on DEX saves vs seen effects."}
+      ]
+    },
+    {
+      "level": 3,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Primal Path", "slug": "barbarian-primal-path", "srd": true, "notes": "SRD placeholder — pick a subclass; details not included."}
+      ]
+    },
+    {
+      "level": 4,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Ability Score Improvement", "slug": "barbarian-asi-1", "srd": true, "notes": "SRD placeholder — increase ability scores or take a feat."}
+      ]
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "features": [
+        {"name": "Extra Attack", "slug": "barbarian-extra-attack-1", "srd": true, "notes": "SRD placeholder — attack twice when you take the Attack action."},
+        {"name": "Fast Movement", "slug": "barbarian-fast-movement", "srd": true, "notes": "SRD placeholder — +10 ft speed while not wearing heavy armor."}
+      ]
+    }
+  ],
+  "notes": "Stub SRD-only barbarian data (levels 1–5). Feature texts intentionally omitted; placeholders only."
+}

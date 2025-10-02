@@ -1,0 +1,117 @@
+{
+  "name": "Bard",
+  "srd_id": "class:bard:srd-5-1",
+  "edition": "5e-2014",
+  "license": "CC-BY-4.0",
+  "source": {
+    "title": "System Reference Document 5.1",
+    "url": "https://dnd.wizards.com/resources/systems-reference-document",
+    "publisher": "Wizards of the Coast"
+  },
+
+  "hit_die": 8,
+  "primary_abilities": ["CHA"],
+  "saving_throw_proficiencies": ["DEX", "CHA"],
+
+  "proficiencies": {
+    "armor": ["Light"],
+    "weapons": ["Simple", "Hand crossbows", "Longswords", "Rapiers", "Shortswords"],
+    "tools": ["Three musical instruments of your choice"],
+    "skills": {
+      "choose": 3,
+      "from": ["(as per SRD)"]
+    }
+  },
+
+  "spellcasting": {
+    "is_spellcaster": true,
+    "spellcasting_ability": "CHA",
+    "progression_note": null,
+    "slots_by_level": null,
+    "cantrips_known_by_level": null
+  },
+
+  "features_by_level": [
+    {
+      "level": 1,
+      "features": [
+        {
+          "name": "Spellcasting",
+          "srd_feature_id": "bard:spellcasting",
+          "description_md": "SRD placeholder — prepare & cast bard spells; no full text here.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Bardic Inspiration (d6)",
+          "srd_feature_id": "bard:bardic-inspiration-d6",
+          "description_md": "SRD placeholder — inspire allies with dice pool (d6 at this level).",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "features": [
+        {
+          "name": "Jack of All Trades",
+          "srd_feature_id": "bard:jack-of-all-trades",
+          "description_md": "SRD placeholder — add half proficiency bonus to checks not already proficient.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Song of Rest (d6)",
+          "srd_feature_id": "bard:song-of-rest-d6",
+          "description_md": "SRD placeholder — allies regain extra hp during short rests.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "features": [
+        {
+          "name": "Bard College",
+          "srd_feature_id": "bard:college",
+          "description_md": "SRD placeholder — choose a subclass; details not included.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Expertise",
+          "srd_feature_id": "bard:expertise-1",
+          "description_md": "SRD placeholder — double proficiency in two skills.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "features": [
+        {
+          "name": "Ability Score Improvement",
+          "srd_feature_id": "bard:asi-1",
+          "description_md": "SRD placeholder — increase ability scores or take a feat.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "features": [
+        {
+          "name": "Bardic Inspiration (d8)",
+          "srd_feature_id": "bard:bardic-inspiration-d8",
+          "description_md": "SRD placeholder — inspiration dice improve to d8.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Font of Inspiration",
+          "srd_feature_id": "bard:font-of-inspiration",
+          "description_md": "SRD placeholder — regain Bardic Inspiration after a short/long rest.",
+          "source": "SRD 5.1"
+        }
+      ]
+    }
+  ],
+
+  "notes": "Canonical conversion of your Bard stub (SRD-only placeholders; no full text)."
+}

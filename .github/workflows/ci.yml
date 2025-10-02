@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:6
+        ports: [ "27017:27017" ]
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      MONGODB_URI: mongodb://localhost:27017/dnd_srd
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: .               # <-- optional: set once for all steps
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+
+      # NEW: install mongosh client on the runner
+      - name: Install mongosh
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -qO - https://pgp.mongodb.com/server-6.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
+          echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-mongosh
+
+      - name: Wait for Mongo to be ready (PyMongo ping)
+        run: |
+          python - << 'PY'
+          import time, os
+          from pymongo import MongoClient
+          uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/dnd_srd")
+          for i in range(60):
+            try:
+              MongoClient(uri, serverSelectionTimeoutMS=500).admin.command("ping")
+              print("Mongo is up"); break
+            except Exception as e:
+              print("Waiting for Mongo...", e); time.sleep(1)
+          else:
+            raise SystemExit("Mongo did not become ready in time")
+          PY
+
+      - name: Create indexes (idempotent)
+        run: mongosh "${MONGODB_URI}" scripts/indexes.mongo.js
+
+      - name: Apply features validator
+        run: mongosh "${MONGODB_URI}" scripts/feature_validator.mongo.js
+
+      - name: Run ingest (first pass)
+        run: python -m scripts.ingest_srd
+
+      - name: Run ingest (idempotence check)
+        run: python -m scripts.ingest_srd
+
+      - name: Run tests
+        run: pytest -q
+        # If you kept PYTHONPATH at job level, you can drop this env block.
+        # env:
+        #   PYTHONPATH: .

@@ -1,0 +1,12 @@
+name: srd-mongo
+channels: [conda-forge, defaults]
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - pymongo
+      - jsonschema
+      - pytest
+      # Optional dev tools (uncomment if you want them):
+      # - black
+      # - ruff

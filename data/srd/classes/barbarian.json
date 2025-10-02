@@ -1,0 +1,111 @@
+{
+  "name": "Barbarian",
+  "srd_id": "class:barbarian:srd-5-1",
+  "edition": "5e-2014",
+  "license": "CC-BY-4.0",
+  "source": {
+    "title": "System Reference Document 5.1",
+    "url": "https://dnd.wizards.com/resources/systems-reference-document",
+    "publisher": "Wizards of the Coast"
+  },
+
+  "hit_die": 12,
+  "primary_abilities": ["STR", "CON"],
+  "saving_throw_proficiencies": ["STR", "CON"],
+
+  "proficiencies": {
+    "armor": ["Light", "Medium", "Shields"],
+    "weapons": ["Simple", "Martial"],
+    "tools": [],
+    "skills": {
+      "choose": 2,
+      "from": ["(as per SRD)"]
+    }
+  },
+
+  "spellcasting": {
+    "is_spellcaster": false,
+    "spellcasting_ability": null,
+    "progression_note": null,
+    "slots_by_level": null,
+    "cantrips_known_by_level": null
+  },
+
+  "features_by_level": [
+    {
+      "level": 1,
+      "features": [
+        {
+          "name": "Rage",
+          "srd_feature_id": "barbarian:rage",
+          "description_md": "SRD placeholder — enter a rage a limited number of times.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Unarmored Defense",
+          "srd_feature_id": "barbarian:unarmored-defense",
+          "description_md": "SRD placeholder — AC = 10 + DEX + CON while not wearing armor.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "features": [
+        {
+          "name": "Reckless Attack",
+          "srd_feature_id": "barbarian:reckless-attack",
+          "description_md": "SRD placeholder — gain advantage on melee STR attacks; attacks against you have advantage until your next turn.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Danger Sense",
+          "srd_feature_id": "barbarian:danger-sense",
+          "description_md": "SRD placeholder — advantage on DEX saving throws against effects you can see.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "features": [
+        {
+          "name": "Primal Path",
+          "srd_feature_id": "barbarian:primal-path",
+          "description_md": "SRD placeholder — choose a subclass; details not included.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "features": [
+        {
+          "name": "Ability Score Improvement",
+          "srd_feature_id": "barbarian:asi-1",
+          "description_md": "SRD placeholder — increase ability scores or take a feat.",
+          "source": "SRD 5.1"
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "features": [
+        {
+          "name": "Extra Attack",
+          "srd_feature_id": "barbarian:extra-attack-1",
+          "description_md": "SRD placeholder — attack twice when you take the Attack action.",
+          "source": "SRD 5.1"
+        },
+        {
+          "name": "Fast Movement",
+          "srd_feature_id": "barbarian:fast-movement",
+          "description_md": "SRD placeholder — +10 ft speed while not wearing heavy armor.",
+          "source": "SRD 5.1"
+        }
+      ]
+    }
+  ],
+
+  "notes": "Canonical conversion of your Barbarian stub (SRD-only placeholders; no full text)."
+}

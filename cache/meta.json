@@ -1,0 +1,23 @@
+{
+  "generated_at": "2025-10-02T09:51:08Z",
+  "edition": "5e-2014",
+  "license": "CC-BY-4.0",
+  "source": "SRD 5.1",
+  "class_documents": 4,
+  "feature_documents": 24,
+  "classes": [
+    "Barbarian",
+    "Bard",
+    "Fighter",
+    "Wizard"
+  ],
+  "levels_supported": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "license_notice": "D&D 5.1 SRD \u00a9 Wizards of the Coast \u2014 CC-BY-4.0 (see LICENSE)",
+  "attribution": "Dungeons & Dragons\u00ae 5.1 System Reference Document (SRD) \u2014 Wizards of the Coast. Source: https://dnd.wizards.com/resources/systems-reference-document"
+}

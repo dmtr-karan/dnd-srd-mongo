@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/schemas/srd-class-5e-2014.json",
+  "$comment": "Schema for canonical SRD-only class JSONs (D&D 5e 2014). Instances must be SRD-safe excerpts with placeholder texts where needed. Repo ingesters validate against this file; do not inline schema inside scripts.",
+  "title": "D&D 5e (2014) SRD Class",
+  "type": "object",
+  "required": [
+    "name",
+    "srd_id",
+    "edition",
+    "license",
+    "source",
+    "hit_die",
+    "primary_abilities",
+    "saving_throw_proficiencies",
+    "proficiencies",
+    "spellcasting",
+    "features_by_level"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "srd_id": { "type": "string", "pattern": "^[a-z0-9:-]+$" },
+    "edition": { "type": "string", "enum": ["5e-2014"] },
+    "license": { "type": "string", "enum": ["CC-BY-4.0"] },
+
+    "source": {
+      "type": "object",
+      "required": ["title", "publisher"],
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "publisher": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "hit_die": { "type": "integer", "enum": [6, 8, 10, 12] },
+
+    "primary_abilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "enum": ["STR","DEX","CON","INT","WIS","CHA"] }
+    },
+
+    "saving_throw_proficiencies": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "string", "enum": ["STR","DEX","CON","INT","WIS","CHA"] }
+    },
+
+    "proficiencies": {
+      "type": "object",
+      "required": ["armor","weapons","tools","skills"],
+      "properties": {
+        "armor":  { "type": "array", "items": { "type": "string" } },
+        "weapons":{ "type": "array", "items": { "type": "string" } },
+        "tools":  { "type": "array", "items": { "type": "string" } },
+        "skills": {
+          "type": "object",
+          "required": ["choose","from"],
+          "properties": {
+            "choose": { "type": "integer", "minimum": 0 },
+            "from":   { "type": "array", "minItems": 1, "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "spellcasting": {
+      "type": "object",
+      "required": ["is_spellcaster"],
+      "properties": {
+        "is_spellcaster": { "type": "boolean" },
+        "spellcasting_ability": { "type": ["string","null"], "enum": ["STR","DEX","CON","INT","WIS","CHA", null] },
+        "progression_note": { "type": ["string","null"] },
+        "slots_by_level": {
+          "type": ["array","null"],
+          "items": {
+            "type": "object",
+            "required": ["level","slots"],
+            "properties": {
+              "level": { "type": "integer", "minimum": 1, "maximum": 20 },
+              "slots": {
+                "type": "object",
+                "patternProperties": {
+                  "^[1-9][0-9]*$": { "type": "integer", "minimum": 0 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "cantrips_known_by_level": {
+          "type": ["array","null"],
+          "items": {
+            "type": "object",
+            "required": ["level","count"],
+            "properties": {
+              "level": { "type": "integer", "minimum": 1, "maximum": 20 },
+              "count": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "features_by_level": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["level","features"],
+        "properties": {
+          "level": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "features": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name","description_md","source"],
+              "properties": {
+                "name": { "type": "string" },
+                "srd_feature_id": { "type": ["string","null"] },
+                "description_md": { "type": "string" },
+                "source": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "notes": { "type": ["string","null"] }
+  },
+
+  "additionalProperties": false
+}

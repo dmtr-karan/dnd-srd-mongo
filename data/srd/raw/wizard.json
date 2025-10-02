@@ -1,0 +1,50 @@
+{
+  "class": "Wizard",
+  "source": "SRD 5.1",
+  "hit_die": "d6",
+  "primary_abilities": ["INT"],
+  "proficiencies_overview": {
+    "armor": "None",
+    "weapons": "Daggers, darts, slings, quarterstaffs, light crossbows",
+    "tools": "None",
+    "saving_throws": ["INT", "WIS"],
+    "skills_choose": 2
+  },
+  "spellcasting": true,
+  "spellcasting_ability": "INT",
+  "levels": [
+    {
+      "level": 1,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Spellcasting", "slug": "wizard-spellcasting", "srd": true, "notes": "SRD placeholder — prepare & cast wizard spells; no full text here."},
+        {"name": "Arcane Recovery", "slug": "wizard-arcane-recovery", "srd": true, "notes": "SRD placeholder — recover some spell slots on a short rest."}
+      ]
+    },
+    {
+      "level": 2,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Arcane Tradition", "slug": "wizard-arcane-tradition", "srd": true, "notes": "SRD placeholder — pick a subclass; details not included."}
+      ]
+    },
+    {
+      "level": 3,
+      "proficiency_bonus": 2,
+      "features": []
+    },
+    {
+      "level": 4,
+      "proficiency_bonus": 2,
+      "features": [
+        {"name": "Ability Score Improvement", "slug": "wizard-asi-1", "srd": true, "notes": "SRD placeholder — increase ability scores or take a feat."}
+      ]
+    },
+    {
+      "level": 5,
+      "proficiency_bonus": 3,
+      "features": []
+    }
+  ],
+  "notes": "Stub SRD-only wizard data (levels 1–5). Feature texts intentionally omitted; placeholders only."
+}
