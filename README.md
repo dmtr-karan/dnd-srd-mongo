@@ -6,6 +6,8 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)  
 [![MongoDB 5+](https://img.shields.io/badge/MongoDB-5%2B-brightgreen.svg)](https://www.mongodb.com/)
 
+<sub>Keywords: D&D, 5e, SRD, MongoDB, TTRPG</sub>
+
 ## ✨ What this is
 A **production-style project** that ingests **D&D 5e SRD class data (levels 1–5)**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
 - **Embedded `classes`** collection with full `features_by_level`
