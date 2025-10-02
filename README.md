@@ -1,4 +1,4 @@
-# D&D 5e SRD — MongoDB Prototype (Phase 3)
+# D&D 5e SRD — MongoDB
 
 [![CI](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml/badge.svg?branch=main&event=push&ts=20251002)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
@@ -7,13 +7,13 @@
 [![MongoDB 5+](https://img.shields.io/badge/MongoDB-5%2B-brightgreen.svg)](https://www.mongodb.com/)
 
 ## ✨ What this is
-A **production-style prototype** that ingests **D&D 5e SRD class data (levels 1–5)**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
+A **production-style project** that ingests **D&D 5e SRD class data (levels 1–5)**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
 - **Embedded `classes`** collection with full `features_by_level`
 - **Normalized `features`** collection with stable slugs + indexes
 
 It also emits **deterministic cache JSONs** for fast demos and ships a tiny **read helper layer** + tests.
 
-This is **Phase 3** of a larger learning/demo project exploring how to build a **character progression engine** and other D&D tools on top of MongoDB.
+This repository is part of a larger learning/demo project exploring how to build a **character progression engine** and other D&D tools on top of MongoDB.
 
 ---
 
