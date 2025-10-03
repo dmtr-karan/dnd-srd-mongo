@@ -1,4 +1,12 @@
-# D&D 5e SRD — MongoDB
+<p align="center">
+  <img src="assets/crest.png" alt="Epic Crest Logo" width="360"/>
+</p>
+
+<h1 align="center">D&D 5e SRD — MongoDB</h1>
+
+<p align="center">
+  <em>Production-style MongoDB project modeling D&D 5e SRD class data (levels 1–5) — schema design, ETL ingestion, and JSON validation</em>
+</p>
 
 [![CI](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml/badge.svg?branch=main&event=push&ts=20251002)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
@@ -7,6 +15,7 @@
 [![MongoDB 5+](https://img.shields.io/badge/MongoDB-5%2B-brightgreen.svg)](https://www.mongodb.com/)
 
 <sub>Keywords: D&D, 5e, SRD, MongoDB, TTRPG</sub>
+
 
 ## ✨ What this is
 A **production-style project** that ingests **D&D 5e SRD class data (levels 1–5)**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
@@ -27,6 +36,24 @@ This repository is part of a larger learning/demo project exploring how to build
 - Strict validator (`scripts/feature_validator.mongo.js`)
 - Cache emitter (`cache/classes.min.json`, `cache/meta.json`)
 - Smoke + helper tests (`tests/`)
+
+---
+
+---
+
+## 🗂️ Schema Design — Embedded vs Normalized
+
+This project demonstrates two complementary MongoDB schema approaches for the same SRD class data:
+
+- **Embedded** → all class features by level are stored inside each class document.  
+- **Normalized** → features are stored in a separate collection with slugs and indexes, deduplicating shared rules.  
+
+<p align="center">
+  <img src="assets/schema.png" alt="Epic Schema Diagram" width="720"/>
+</p>
+
+> **Why both?**  
+> Embedded schemas make common reads self-contained; normalized avoids duplication and enables cross-class analytics.
 
 ---
 
@@ -136,9 +163,6 @@ Outputs (click to expand):
 **Optional extensions (showcase later):**
 - Read-only API (FastAPI) and/or small Streamlit viewer.
 - Atlas how-to with secure connection notes.
-
-> Why both embedded and normalized?  
-> Embedded keeps common reads self-contained; normalized avoids duplication and enables cross-class analytics.
 
 ---
 
