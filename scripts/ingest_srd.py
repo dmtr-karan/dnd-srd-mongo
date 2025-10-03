@@ -331,7 +331,7 @@ def main() -> None:
     for stem, cnt in file_counts.items():
         print(f"{stem}: {cnt} features")
     print(f"\nMongoDB totals → classes: {class_count}, features: {feature_count}")
-    print(f"Cache written → {CACHE_DIR/'classes.min.json'}, {CACHE_DIR/'meta.json'}")
+    print("Cache written → cache/classes.min.json, cache/meta.json")
     print("\nDone.")
 
 
