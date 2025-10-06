@@ -39,6 +39,59 @@ This repository is part of a larger learning/demo project exploring how to build
 
 ---
 
+## 📁 Repo Structure
+
+```
+dnd-srd-mongo/
+├─ .github/
+│  └─ workflows/
+│     └─ ci.yml                       # GitHub Actions workflow (CI)
+├─ assets/
+│  ├─ crest.png                        # Square crest (README header)
+│  ├─ crest_social.png                 # 1280×640 social preview (GitHub/LinkedIn)
+│  ├─ crest_widescreen.png             # 16:9 crest (LinkedIn Featured)
+│  ├─ ingest.png                       # Ingest totals screenshot (square)
+│  ├─ ingest_wide.png                  # Ingest screenshot (16:9)
+│  ├─ schema.png                       # Schema diagram (square)
+│  └─ schema_wide.png                  # Schema diagram (16:9)
+├─ cache/                              # Deterministic cache JSONs for demos
+│  ├─ classes.min.json
+│  └─ meta.json
+├─ data/
+│  └─ srd/
+│     ├─ classes/                      # Canonical SRD class JSONs
+│     │  ├─ barbarian.json
+│     │  ├─ bard.json
+│     │  ├─ fighter.json
+│     │  └─ wizard.json
+│     └─ raw/                          # Source SRD (pre-normalization)
+│        ├─ barbarian.json
+│        ├─ bard.json
+│        ├─ fighter.json
+│        └─ wizard.json
+├─ schemas/
+│  └─ srd-class-5e-2014.json           # JSON Schema (validation)
+├─ scripts/
+│  ├─ feature_validator.mongo.js       # Strict collection validator
+│  ├─ indexes.mongo.js                 # Canonical indexes
+│  ├─ ingest_srd.py                    # Idempotent ETL/ingest
+│  ├─ read_helpers.py                  # Tiny read layer (example queries)
+│  └─ __init__.py
+├─ tests/                              # Smoke + validator + helper tests
+│  ├─ test_read_helpers.py
+│  ├─ test_smoke.py
+│  └─ test_validator.py
+├─ .env.example                        # Example env vars (local)
+├─ .gitignore                          # Keeps secrets & caches out of VCS
+├─ CHANGELOG.md                        # Notable changes
+├─ CONTRIBUTING.md                     # Contribution guidelines
+├─ LICENSE.txt                         # Project license
+├─ README.md                           # Project documentation
+├─ environment.yml                     # Conda environment (optional)
+├─ pytest.ini                          # Pytest config
+└─ requirements.txt                    # Pinned dependencies
+```
+
 ---
 
 ## 🗂️ Schema Design — Embedded vs Normalized
