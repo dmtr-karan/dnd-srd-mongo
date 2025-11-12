@@ -105,18 +105,13 @@ jobs:
     services:
       mongo:
         image: mongo:7.0
-        options: >-
-          --health-cmd="mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok'"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=12
+        # Expose the service to the host runner; hostname 'mongo' won't resolve outside a container job
+        ports:
+          - 27017:27017
 
     env:
-      # Use the service hostname, not localhost (no ports published)
-      MONGODB_URI: mongodb://mongo:27017/dnd_srd_ci
-      # Back-compat if the script reads these:
-      MONGO_URL: mongodb://mongo:27017
-      DB_NAME: dnd_srd_ci
+      # Use localhost since we're not using a containerized job
+      MONGODB_URI: mongodb://localhost:27017/dnd_srd_ci
 
     steps:
       - name: Checkout
@@ -138,8 +133,8 @@ jobs:
         run: |
           import os, time, sys
           from pymongo import MongoClient
-          uri = os.environ.get("MONGODB_URI") or f"{os.environ.get('MONGO_URL')}/{os.environ.get('DB_NAME','dnd_srd_ci')}"
-          deadline = time.time() + 90
+          uri = os.environ["MONGODB_URI"]
+          deadline = time.time() + 60
           last = None
           while time.time() < deadline:
             try:
@@ -178,9 +173,3 @@ jobs:
           else
             echo "✅ **DB ingest completed.** See the \`ingest_report\` artifact for details." >> "$GITHUB_STEP_SUMMARY"
           fi
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "<details><summary>Show first 50 lines of ingest report</summary>" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          head -n 50 ingest_report.txt >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "</details>" >> "$GITHUB_STEP_SUMMARY"
