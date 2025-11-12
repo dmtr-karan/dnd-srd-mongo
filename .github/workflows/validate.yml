@@ -2,7 +2,9 @@ name: Validate SRD Data
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - 'data/srd/**'
+      - '.github/workflows/validate.yml'  # keep runs when the workflow itself changes
   workflow_dispatch:
 
 permissions:
@@ -36,7 +38,6 @@ jobs:
           python scripts/ingest_srd.py --validate --no-db | tee validation_report.txt
           echo "status=success" >> "$GITHUB_OUTPUT"
       
-
       - name: Upload validation report
         uses: actions/upload-artifact@v4
         with:
