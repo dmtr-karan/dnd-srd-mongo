@@ -34,6 +34,7 @@ Usage (Windows example):
 """
 
 import os
+import argparse
 import json
 import datetime as dt
 from pathlib import Path
@@ -321,6 +322,9 @@ def main() -> None:
 
     docs = [data for _, data in valid]
     client = connect_mongo()
+    # Validation-only mode: skip DB operations if requested
+    if os.getenv("MONGODND_NO_DB") == "1":
+        return
     class_count, feature_count = upsert_classes_and_features(client, docs)
     write_caches(docs, class_count, feature_count)
 
@@ -336,19 +340,16 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    import argparse
 
     parser = argparse.ArgumentParser(description="MongoDND — SRD ingest & validation")
-    parser.add_argument(
-        "--validate",
-        action="store_true",
-        help="Execute validation routine and exit."
-    )
+    parser.add_argument("--validate", action="store_true", help="Execute validation workflow and exit.")
+    parser.add_argument("--no-db",    action="store_true", help="Skip database operations.")
     args = parser.parse_args()
 
-    if args.validate:
-        # Execute validation workflow
-        main()
-    else:
-        # Default execution path
-        main()
+    # Signal validation-only (no DB) mode to the main routine
+    if args.no_db:
+        os.environ["MONGODND_NO_DB"] = "1"
+
+    # Default execution path preserved
+    main()
+

@@ -33,9 +33,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Expect scripts/ingest_srd.py to support --validate (file/schema only)
-          python scripts/ingest_srd.py --validate | tee validation_report.txt
+          python scripts/ingest_srd.py --validate --no-db | tee validation_report.txt
           echo "status=success" >> "$GITHUB_OUTPUT"
+      
 
       - name: Upload validation report
         uses: actions/upload-artifact@v4
