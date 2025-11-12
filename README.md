@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/crest.png" alt="Epic Crest Logo" width="360"/>
+  <img src="assets/crest.png" alt="Project Crest Logo" width="360"/>
 </p>
 
 <h1 align="center">D&D 5e SRD — MongoDB</h1>
@@ -9,6 +9,7 @@
 </p>
 
 [![CI](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml/badge.svg?branch=main&event=push&ts=20251002)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml)  
+[![Validate](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/validate.yml/badge.svg)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
 [![SRD: CC-BY-4.0](https://img.shields.io/badge/SRD-CC--BY--4.0-lightgrey.svg)](https://dnd.wizards.com/resources/systems-reference-document)  
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)  
@@ -235,7 +236,7 @@ Automated pipelines run on **GitHub Actions**, validating SRD JSON files, spinni
 - **CI:** schema validation job to fail on invalid data.
 - **Licensing:** keep SRD content under CC-BY-4.0 with explicit attribution.
 
-**Optional extensions (future showcase):**
+**Planned Extensions:**
 - Read-only API (FastAPI) or small Streamlit viewer.
 - Atlas how-to with secure connection notes.
 
