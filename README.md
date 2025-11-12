@@ -5,7 +5,7 @@
 <h1 align="center">D&D 5e SRD — MongoDB</h1>
 
 <p align="center">
-  <em>Production-style MongoDB project modeling D&D 5e SRD class data (levels 1–5) — schema design, ETL ingestion, and JSON validation</em>
+  <em>Automated SRD validation powered by MongoDB and GitHub Actions — structured data, legendary precision.</em>
 </p>
 
 [![CI](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml/badge.svg?branch=main&event=push&ts=20251002)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml)  
@@ -45,51 +45,53 @@ This repository is part of a larger learning/demo project exploring how to build
 dnd-srd-mongo/
 ├─ .github/
 │  └─ workflows/
-│     └─ ci.yml                       # GitHub Actions workflow (CI)
+│     ├─ ci.yml                         # Manual/legacy CI (reference)
+│     ├─ issues.yml                     # Logs new issues to run summary
+│     └─ validate.yml                   # Main validation + artifacts pipeline
 ├─ assets/
-│  ├─ crest.png                        # Square crest (README header)
-│  ├─ crest_social.png                 # 1280×640 social preview (GitHub/LinkedIn)
-│  ├─ crest_widescreen.png             # 16:9 crest (LinkedIn Featured)
-│  ├─ ingest.png                       # Ingest totals screenshot (square)
-│  ├─ ingest_wide.png                  # Ingest screenshot (16:9)
-│  ├─ schema.png                       # Schema diagram (square)
-│  └─ schema_wide.png                  # Schema diagram (16:9)
-├─ cache/                              # Deterministic cache JSONs for demos
+│  ├─ crest.png                         # README header (square)
+│  ├─ crest_social.png                  # 1280×640 social preview
+│  ├─ crest_widescreen.png              # 16:9 variant
+│  ├─ ingest.png                        # Validation/ingest screenshot (square)
+│  ├─ ingest_wide.png                   # 16:9 variant
+│  ├─ schema.png                        # Schema diagram (square)
+│  └─ schema_wide.png                   # 16:9 variant
+├─ cache/                               # Deterministic cache JSONs for demos
 │  ├─ classes.min.json
 │  └─ meta.json
 ├─ data/
 │  └─ srd/
-│     ├─ classes/                      # Canonical SRD class JSONs
+│     ├─ classes/                       # Canonical SRD class JSONs
 │     │  ├─ barbarian.json
 │     │  ├─ bard.json
 │     │  ├─ fighter.json
 │     │  └─ wizard.json
-│     └─ raw/                          # Source SRD (pre-normalization)
+│     └─ raw/                           # Source SRD (pre-normalization)
 │        ├─ barbarian.json
 │        ├─ bard.json
 │        ├─ fighter.json
 │        └─ wizard.json
 ├─ schemas/
-│  └─ srd-class-5e-2014.json           # JSON Schema (validation)
+│  └─ srd-class-5e-2014.json            # JSON Schema (validation)
 ├─ scripts/
-│  ├─ feature_validator.mongo.js       # Strict collection validator
-│  ├─ indexes.mongo.js                 # Canonical indexes
-│  ├─ ingest_srd.py                    # Idempotent ETL/ingest
-│  ├─ read_helpers.py                  # Tiny read layer (example queries)
+│  ├─ feature_validator.mongo.js        # Strict collection validator
+│  ├─ indexes.mongo.js                  # Canonical indexes
+│  ├─ ingest_srd.py                     # Idempotent ETL/ingest
+│  ├─ read_helpers.py                   # Tiny read layer (example queries)
 │  └─ __init__.py
-├─ tests/                              # Smoke + validator + helper tests
+├─ tests/
 │  ├─ test_read_helpers.py
 │  ├─ test_smoke.py
 │  └─ test_validator.py
-├─ .env.example                        # Example env vars (local)
-├─ .gitignore                          # Keeps secrets & caches out of VCS
-├─ CHANGELOG.md                        # Notable changes
-├─ CONTRIBUTING.md                     # Contribution guidelines
-├─ LICENSE.txt                         # Project license
-├─ README.md                           # Project documentation
-├─ environment.yml                     # Conda environment (optional)
-├─ pytest.ini                          # Pytest config
-└─ requirements.txt                    # Pinned dependencies
+├─ .env.example                         # Example env vars (local)
+├─ .gitignore
+├─ CHANGELOG.md
+├─ CONTRIBUTING.md
+├─ LICENSE.txt
+├─ README.md
+├─ environment.yml                      # Conda environment (optional)
+├─ pytest.ini                           # Pytest config
+└─ requirements.txt                     # Pinned dependencies
 ```
 
 ---
@@ -119,7 +121,7 @@ conda activate srd-mongo
 ~~~
 
 ### 1b. Environment variables
-Copy the template to set your MongoDB URI locally:
+Copy the template to set your MongoDB URI locally (used for both local runs and CI pipelines):
 
 **Linux/macOS/Git Bash**
 ~~~bash
@@ -130,6 +132,7 @@ cp .env.example .env
 ~~~powershell
 copy .env.example .env
 ~~~
+
 
 ### 2. Start MongoDB (Windows examples)
 Service install:
@@ -198,6 +201,25 @@ Outputs (click to expand):
 
 </details>
 
+---
+
+## ⚙️ CI/CD Highlights
+
+Automated pipelines run on **GitHub Actions**, validating SRD JSON files, spinning up a temporary MongoDB service, and publishing a compact run summary.
+
+| Workflow | Purpose | Key Features |
+|---|---|---|
+| **validate.yml** | Core validation pipeline | Triggers on push and manual runs · sets up Python + Mongo service · executes schema validation & ingest · uploads summary and artifacts via `$GITHUB_STEP_SUMMARY`. |
+| **ci.yml** | Manual reference workflow | Retained for custom validation jobs and controlled test runs. |
+| **issues.yml** | Issue event logger | Runs when a new GitHub Issue is opened · echoes title, author, labels · writes a short summary to the run. |
+
+> All workflows are idempotent and use pip caching via `actions/setup-python@v5`. Each can also be triggered manually with `workflow_dispatch`.
+
+<p align="center">
+  <img src="assets/ingest.png" alt="Validation summary" width="720"/>
+</p>
+
+---
 
 ## 🧭 Status & Roadmap
 
@@ -205,7 +227,7 @@ Outputs (click to expand):
 - Local SRD sample data (classes + features) included.
 - Example read queries in README; CI is green on `main`.
 
-**Near-term (`0.3.x` by 2025-10-20):**
+**Next steps:**
 - **Ingest CLI** (`scripts/ingest_srd.py`): read local SRD JSON, validate with JSON Schema, write both:
   - **Embedded** (`classes_embedded`) for simple reads.
   - **Normalized** (`features`, `classes_refs`) for dedup & analytics.
@@ -213,8 +235,8 @@ Outputs (click to expand):
 - **CI:** schema validation job to fail on invalid data.
 - **Licensing:** keep SRD content under CC-BY-4.0 with explicit attribution.
 
-**Optional extensions (showcase later):**
-- Read-only API (FastAPI) and/or small Streamlit viewer.
+**Optional extensions (future showcase):**
+- Read-only API (FastAPI) or small Streamlit viewer.
 - Atlas how-to with secure connection notes.
 
 ---
