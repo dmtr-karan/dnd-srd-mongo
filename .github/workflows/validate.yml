@@ -100,7 +100,8 @@ jobs:
   ingest-db:
     name: Ingest into ephemeral Mongo (CI-only)
     runs-on: ubuntu-latest
-    needs: [validate]   # keep the current flow; DB job runs after validation
+    needs: [ validate ]
+
     services:
       mongo:
         image: mongo:7.0
@@ -111,7 +112,10 @@ jobs:
           --health-retries=12
 
     env:
-      MONGO_URL: mongodb://localhost:27017
+      # Use the service hostname, not localhost (no ports published)
+      MONGODB_URI: mongodb://mongo:27017/dnd_srd_ci
+      # Back-compat if the script reads these:
+      MONGO_URL: mongodb://mongo:27017
       DB_NAME: dnd_srd_ci
 
     steps:
@@ -134,13 +138,13 @@ jobs:
         run: |
           import os, time, sys
           from pymongo import MongoClient
-          url = os.environ["MONGO_URL"]
-          deadline = time.time() + 60
+          uri = os.environ.get("MONGODB_URI") or f"{os.environ.get('MONGO_URL')}/{os.environ.get('DB_NAME','dnd_srd_ci')}"
+          deadline = time.time() + 90
           last = None
           while time.time() < deadline:
             try:
-              ok = MongoClient(url, serverSelectionTimeoutMS=1000).admin.command("ping")["ok"]
-              if ok == 1: 
+              ok = MongoClient(uri, serverSelectionTimeoutMS=1500).admin.command("ping")["ok"]
+              if ok == 1:
                 print("MongoDB is ready.")
                 break
             except Exception as e:
@@ -154,7 +158,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Run with explicit flag to enable DB writes (safe & predictable)
           python scripts/ingest_srd.py --validate --write-db 2>&1 | tee ingest_report.txt
 
       - name: Upload ingest report
