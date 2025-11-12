@@ -336,4 +336,19 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="MongoDND — SRD ingest & validation")
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Execute validation routine and exit."
+    )
+    args = parser.parse_args()
+
+    if args.validate:
+        # Execute validation workflow
+        main()
+    else:
+        # Default execution path
+        main()
