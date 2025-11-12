@@ -35,15 +35,32 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/ingest_srd.py --validate --no-db | tee validation_report.txt
+          python scripts/ingest_srd.py --validate --no-db 2>&1 | tee validation_report.txt
           echo "status=success" >> "$GITHUB_OUTPUT"
-      
+
+      - name: Write run metadata
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "repo=${GITHUB_REPOSITORY}"
+            echo "commit_sha=${GITHUB_SHA}"
+            echo "ref=${GITHUB_REF}"
+            echo "actor=${GITHUB_ACTOR}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_number=${GITHUB_RUN_NUMBER}"
+            echo "run_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          } > run_meta.txt
+
       - name: Upload validation report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: validation_report
-          path: validation_report.txt
-          if-no-files-found: warn
+          path: |
+            validation_report.txt
+            run_meta.txt
+          if-no-files-found: error
           retention-days: 7
 
   summarize:
@@ -53,21 +70,25 @@ jobs:
 
     steps:
       - name: Download validation report
+        if: always()
         uses: actions/download-artifact@v4
         with:
           name: validation_report
           path: .
 
       - name: Write summary
+        if: always()
         shell: bash
         run: |
           echo "## SRD Validation — Summary" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           if grep -qiE "error|failed" validation_report.txt; then
-            echo "❌ **Validation found issues.** See the attached report." >> "$GITHUB_STEP_SUMMARY"
+            echo "❌ **Validation found issues.** See the artifact \`validation_report\`." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "✅ **Validation passed** — no errors detected." >> "$GITHUB_STEP_SUMMARY"
           fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Full run logs](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "<details><summary>Show first 50 lines of report</summary>" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
