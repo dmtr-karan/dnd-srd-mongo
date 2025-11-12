@@ -1,0 +1,81 @@
+# File: .github/workflows/issues.yml
+name: Issues — Log & Summarize
+
+on:
+  issues:
+    types: [opened]
+  # Allows manual execution for testing or ad-hoc inspection
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  summarize:
+    name: Summarize new issue
+    runs-on: ubuntu-latest
+    steps:
+      # Provides repository context for potential future steps
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Dump event JSON (for debugging)
+        id: dump
+        shell: bash
+        run: |
+          printf '%s' '${{ toJson(github.event) }}' > event.json
+          echo "Saved event.json"
+
+          {
+            echo "## Raw event payload"
+            echo
+            echo "<details><summary>Expand</summary>"
+            echo
+            echo '```json'
+            cat event.json
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write concise summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Support both real issues event and manual dispatch (no issue object)
+            const ev = context.payload || {};
+            const issue = ev.issue || {};
+            const title  = issue.title  ?? "(no title)";
+            const number = issue.number ?? "—";
+            const author = issue.user?.login ?? "unknown";
+            const url    = issue.html_url ?? "(no url)";
+
+            const rawLabels = Array.isArray(issue.labels) ? issue.labels : [];
+            const labels = rawLabels
+              .map(l => (typeof l === 'string' ? l : (l?.name ?? '')))
+              .filter(Boolean);
+
+            const body = issue.body ?? "";
+            const trimmed = body.length > 400 ? body.slice(0, 400) + "…" : body;
+
+            // Guard against accidental code-fence breakage in summary
+            const safeBody = trimmed.replace(/```/g, "``` ");
+
+            const lines = [
+              `**Title:** ${title}`,
+              `**Number:** #${number}`,
+              `**Author:** @${author}`,
+              `**Labels:** ${labels.length ? labels.join(", ") : "—"}`,
+              `**URL:** ${url}`,
+              "",
+              "#### Body (first 400 chars)",
+              "",
+              "```text",
+              safeBody,
+              "```",
+            ];
+
+            await core.summary
+              .addHeading("🧾 Issue summary", 3)
+              .addRaw(lines.join("\n"))
+              .write();
