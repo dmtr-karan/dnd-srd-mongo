@@ -365,7 +365,3 @@ if __name__ == "__main__":
     else:
         # Full ingest (validate + DB upserts + caches)
         main()
-
-    # Default execution path preserved
-    main()
-
