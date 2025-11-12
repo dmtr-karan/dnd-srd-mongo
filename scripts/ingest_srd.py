@@ -304,6 +304,18 @@ def write_caches(docs: List[Dict[str, Any]], class_count: int, feature_count: in
         json.dump(meta, fh, indent=2)
 
 
+def validate_only() -> None:
+    """Run only load + schema validation (no DB, no caches)."""
+    print("SRD 5.1 ingest started.")
+    items = load_class_files()
+    if not items:
+        print(f"No class JSON found in {DATA_DIR}")
+        raise SystemExit(1)
+    print(f"Found {len(items)} class files.")
+    valid = validate_classes(items)
+    print(f"Validated {len(valid)} class files.")
+
+
 def main() -> None:
     """
     Entrypoint: load → validate → upsert → cache → report.
@@ -344,11 +356,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MongoDND — SRD ingest & validation")
     parser.add_argument("--validate", action="store_true", help="Execute validation workflow and exit.")
     parser.add_argument("--no-db",    action="store_true", help="Skip database operations.")
+    parser.add_argument("--write-db", action="store_true", help="Enable database writes (used in CI)")
     args = parser.parse_args()
 
-    # Signal validation-only (no DB) mode to the main routine
-    if args.no_db:
-        os.environ["MONGODND_NO_DB"] = "1"
+    if args.validate and not args.write_db:
+        # Validation-only path (CI validate job): no DB, no caches
+        validate_only()
+    else:
+        # Full ingest (validate + DB upserts + caches)
+        main()
 
     # Default execution path preserved
     main()
