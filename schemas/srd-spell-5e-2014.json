@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/schemas/srd-spell-5e-2014.json",
+  "$comment": "Schema for canonical SRD-only spell JSONs (D&D 5e 2014). Instances must be SRD-safe excerpts with placeholder texts where needed. Materials are free-text when components.material is true.",
+  "title": "D&D 5e (2014) SRD Spell",
+  "type": "object",
+  "required": [
+    "name",
+    "srd_id",
+    "edition",
+    "license",
+    "source",
+    "level",
+    "school",
+    "casting_time",
+    "range",
+    "duration",
+    "components",
+    "ritual",
+    "concentration",
+    "description_md"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "srd_id": { "type": "string", "pattern": "^[a-z0-9:-]+$" },
+    "edition": { "type": "string", "enum": ["5e-2014"] },
+    "license": { "type": "string", "enum": ["CC-BY-4.0"] },
+
+    "source": {
+      "type": "object",
+      "required": ["title", "publisher"],
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "publisher": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "level": { "type": "integer", "minimum": 0, "maximum": 9 },
+    "school": { "type": "string", "minLength": 1 },
+
+    "casting_time": { "type": "string", "minLength": 1 },
+    "range": { "type": "string", "minLength": 1 },
+    "duration": { "type": "string", "minLength": 1 },
+
+    "ritual": { "type": "boolean" },
+    "concentration": { "type": "boolean" },
+
+    "components": {
+      "type": "object",
+      "required": ["verbal", "somatic", "material"],
+      "properties": {
+        "verbal": { "type": "boolean" },
+        "somatic": { "type": "boolean" },
+        "material": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+
+    "materials": { "type": ["string", "null"] },
+
+    "description_md": { "type": "string", "minLength": 1 },
+    "higher_level_md": {
+      "type": ["array", "null"],
+      "items": { "type": "string" }
+    },
+
+    "notes": { "type": ["string", "null"] }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "components": {
+            "properties": { "material": { "const": true } },
+            "required": ["material"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "materials": { "type": "string", "minLength": 1 }
+        },
+        "required": ["materials"]
+      }
+    }
+  ],
+
+  "additionalProperties": false
+}
