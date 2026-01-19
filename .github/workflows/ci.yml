@@ -1,82 +1,103 @@
-name: CI (manual, integration)
+name: CI
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  test:
+  unit-contract:
+    name: Unit/Contract (ephemeral Mongo)
     runs-on: ubuntu-latest
 
     services:
       mongo:
-        image: mongo:6
-        ports: [ "27017:27017" ]
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+        image: mongo:7.0
+        ports:
+          - 27017:27017
 
     env:
-      MONGODB_URI: mongodb://localhost:27017/dnd_srd
-      PYTHONUNBUFFERED: "1"
-      PYTHONPATH: .               # <-- optional: set once for all steps
+      MONGODB_URI: mongodb://localhost:27017/dnd_srd_ci
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
 
-      # NEW: install mongosh client on the runner
-      - name: Install mongosh
+      - name: Wait for Mongo (pymongo ping)
+        shell: python
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg
-          wget -qO - https://pgp.mongodb.com/server-6.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg
-          echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-          sudo apt-get update
-          sudo apt-get install -y mongodb-mongosh
-
-      - name: Wait for Mongo to be ready (PyMongo ping)
-        run: |
-          python - << 'PY'
-          import time, os
+          import os, time, sys
           from pymongo import MongoClient
-          uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/dnd_srd")
-          for i in range(60):
+          uri = os.environ["MONGODB_URI"]
+          deadline = time.time() + 60
+          last = None
+          while time.time() < deadline:
             try:
-              MongoClient(uri, serverSelectionTimeoutMS=500).admin.command("ping")
-              print("Mongo is up"); break
+              ok = MongoClient(uri, serverSelectionTimeoutMS=1500).admin.command("ping")["ok"]
+              if ok == 1:
+                print("MongoDB is ready.")
+                break
             except Exception as e:
-              print("Waiting for Mongo...", e); time.sleep(1)
+              last = e
+              time.sleep(1)
           else:
-            raise SystemExit("Mongo did not become ready in time")
-          PY
+            print(f"MongoDB did not become ready: {last}", file=sys.stderr)
+            sys.exit(1)
 
-      - name: Create indexes (idempotent)
-        run: mongosh "${MONGODB_URI}" scripts/indexes.mongo.js
+      - name: Ingest with DB writes (pre-test)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/ingest_srd.py --validate --write-db
 
-      - name: Apply features validator
-        run: mongosh "${MONGODB_URI}" scripts/feature_validator.mongo.js
+      - name: Run tests (unit/contract)
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q
 
-      - name: Run ingest (first pass)
-        run: python -m scripts.ingest_srd
+  atlas-integration:
+    name: Atlas integration (secrets-gated)
+    runs-on: ubuntu-latest
+    needs: [ unit-contract ]
+    if: ${{ secrets.ATLAS_MONGODB_URI != '' }}
 
-      - name: Run ingest (idempotence check)
-        run: python -m scripts.ingest_srd
+    env:
+      ATLAS_MONGODB_URI: ${{ secrets.ATLAS_MONGODB_URI }}
 
-      - name: Run tests
-        run: pytest -q
-        # If you kept PYTHONPATH at job level, you can drop this env block.
-        # env:
-        #   PYTHONPATH: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+
+      - name: Run Atlas smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_atlas_smoke.py

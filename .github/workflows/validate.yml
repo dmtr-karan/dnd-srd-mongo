@@ -127,6 +127,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
 
       - name: Wait for Mongo (pymongo ping)
         shell: python
@@ -155,6 +156,12 @@ jobs:
           set -euo pipefail
           python scripts/ingest_srd.py --validate --write-db 2>&1 | tee ingest_report.txt
 
+      - name: Run tests (unit/contract)
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q
+
       - name: Upload ingest report
         uses: actions/upload-artifact@v4
         with:
@@ -173,3 +180,34 @@ jobs:
           else
             echo "✅ **DB ingest completed.** See the \`ingest_report\` artifact for details." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+  atlas-integration:
+    name: Atlas integration (secrets-gated)
+    runs-on: ubuntu-latest
+    needs: [ ingest-db ]
+    if: ${{ secrets.ATLAS_MONGODB_URI != '' }}
+
+    env:
+      ATLAS_MONGODB_URI: ${{ secrets.ATLAS_MONGODB_URI }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+
+      - name: Run Atlas smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q tests/test_atlas_smoke.py
