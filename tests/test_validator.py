@@ -5,17 +5,15 @@ Validator test:
 - Auto-skips if validator isn't active (to avoid red tests locally).
 """
 
-import os
 import pytest
-from pymongo import MongoClient, errors
+from pymongo import errors
 
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/dnd_srd")
+from scripts.db import get_client, get_db
 
 
 def _db():
-    client = MongoClient(MONGODB_URI)
-    db = client.get_default_database()
-    return db if db is not None else client["dnd_srd"]
+    client = get_client()
+    return get_db(client)
 
 
 def _validator_active(db) -> bool:
@@ -33,13 +31,12 @@ def _validator_active(db) -> bool:
 def test_invalid_feature_is_rejected():
     db = _db()
     bad = {
-        # intentionally wrong / missing required fields
-        "class_name": "",                 # empty (minLength 1)
-        "class_srd_id": "class:bad",      # fails pattern
-        "edition": "wrong",               # not '5e-2014'
-        "level": 0,                       # out of bounds
-        "name": "",                       # empty
-        "slug": "not-a-valid-slug",       # pattern expects ...-l<level>
+        "class_name": "",
+        "class_srd_id": "class:bad",
+        "edition": "wrong",
+        "level": 0,
+        "name": "",
+        "slug": "not-a-valid-slug",
         "description_md": "",
         "source": "",
         "license": "CC-BY-4.0",

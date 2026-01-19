@@ -43,11 +43,16 @@ from typing import Dict, Any, List, Tuple
 from pymongo import MongoClient, UpdateOne
 from jsonschema import Draft7Validator
 
+# Canonical DB helpers (support both: imported as package or executed as script)
+try:
+    from scripts.db import get_client
+except ImportError:  # running as: python scripts/ingest_srd.py
+    from db import get_client
+
 ROOT = Path(__file__).resolve().parents[1]  # repo root (assuming scripts/ingest_srd.py)
 DATA_DIR = ROOT / "data" / "srd" / "classes"
 CACHE_DIR = ROOT / "cache"
 
-DEFAULT_URI = "mongodb://localhost:27017/dnd_srd"
 
 
 SCHEMA_PATH = ROOT / "schemas" / "srd-class-5e-2014.json"
@@ -130,9 +135,8 @@ def validate_classes(items: List[Tuple[Path, Dict[str, Any]]]) -> List[Tuple[Pat
 
 
 def connect_mongo() -> MongoClient:
-    uri = os.getenv("MONGODB_URI", DEFAULT_URI)
-    client = MongoClient(uri)
-    return client
+    return get_client()
+
 
 
 def upsert_classes_and_features(client: MongoClient, docs: List[Dict[str, Any]]) -> Tuple[int, int]:

@@ -122,8 +122,10 @@ conda activate srd-mongo
 ~~~
 
 ### 1b. Environment variables
-Copy the template to set your MongoDB URI locally (used for both local runs and CI pipelines):
+This repo reads the Mongo connection string from the **environment variable** `MONGODB_URI`.
+`.env.example` is a convenient template for local development (CI sets `MONGODB_URI` explicitly in workflows).
 
+1) Copy the template:
 **Linux/macOS/Git Bash**
 ~~~bash
 cp .env.example .env
@@ -134,6 +136,23 @@ cp .env.example .env
 copy .env.example .env
 ~~~
 
+2) Load `.env` into your current shell session (so `MONGODB_URI` is actually set):
+
+**Linux/macOS/Git Bash**
+~~~bash
+set -a
+source .env
+set +a
+~~~
+
+**Windows PowerShell**
+~~~powershell
+Get-Content .env | ForEach-Object {
+  if ($_ -match '^\s*#' -or $_ -match '^\s*$') { return }
+  $k, $v = $_.Split('=', 2)
+  Set-Item -Path "env:$k" -Value $v
+}
+~~~
 
 ### 2. Start MongoDB (Windows examples)
 Service install:

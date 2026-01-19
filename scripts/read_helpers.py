@@ -4,17 +4,18 @@ Tiny read layer for showcase & tests.
 Env: MONGODB_URI (default: mongodb://localhost:27017/dnd_srd)
 """
 
-import os
 from typing import List, Dict, Any, Optional
-from pymongo import MongoClient
 
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/dnd_srd")
+# Canonical DB helpers (support both: imported as package or executed as script)
+try:
+    from scripts.db import get_client, get_db
+except ImportError:  # running as: python scripts/read_helpers.py
+    from db import get_client, get_db
 
 
 def _db():
-    client = MongoClient(MONGODB_URI)
-    db = client.get_default_database()
-    return db if db is not None else client["dnd_srd"]
+    client = get_client()
+    return get_db(client)
 
 
 def list_classes() -> List[Dict[str, Any]]:

@@ -1,22 +1,13 @@
 # File: tests/test_read_helpers.py
-"""
-Tests for the tiny read layer.
-Run: pytest -q
-"""
+"""Tests for the tiny read layer."""
 
-import os
-import pytest
-from pymongo import MongoClient
-
+from scripts.db import get_client, get_db
 from scripts.read_helpers import list_classes, features_by_class_level, feature_by_slug
-
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/dnd_srd")
 
 
 def _db():
-    client = MongoClient(MONGODB_URI)
-    db = client.get_default_database()
-    return db if db is not None else client["dnd_srd"]
+    client = get_client()
+    return get_db(client)
 
 
 def test_list_classes_returns_expected_shape():
