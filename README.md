@@ -115,6 +115,29 @@ This project demonstrates two complementary MongoDB schema approaches for the sa
 
 ## 🚀 Quickstart
 
+### 0. Optional: Run the SRD Grounding API (read-only)
+
+This repo also ships a small **read-only FastAPI service** for deterministic SRD grounding (used by the `dnd-concept-to-build` Streamlit app).
+
+Start it locally:
+
+~~~bash
+python -m uvicorn app.main:app --reload --port 8000
+~~~
+
+Sanity check:
+
+- Open `http://127.0.0.1:8000/meta` in your browser
+
+Available endpoints:
+
+- `GET /meta`
+- `GET /classes`
+- `GET /classes/{name}`
+- `GET /classes/{name}/features?level=N`
+- `GET /features/{slug}`
+
+
 ### 1. Environment (Conda recommended)
 ~~~bash
 conda env create -f environment.yml
