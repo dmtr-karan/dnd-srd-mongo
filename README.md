@@ -5,7 +5,7 @@
 <h1 align="center">D&D 5e SRD — MongoDB</h1>
 
 <p align="center">
-  <em>Automated SRD validation powered by MongoDB and GitHub Actions — structured data, legendary precision.</em>
+  <em>Automated SRD validation powered by MongoDB and GitHub Actions — JSON Schema validation, idempotent ingest, and CI checks.</em>
 </p>
 
 [![CI](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml/badge.svg?branch=main&event=push&ts=20251002)](https://github.com/dmtr-karan/dnd-srd-mongo/actions/workflows/ci.yml)  
@@ -19,7 +19,7 @@
 
 
 ## ✨ What this is
-A **production-style project** that ingests **D&D 5e SRD class data (levels 1–5)**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
+A reproducible data pipeline that ingests D&D 5e SRD class data (levels 1–5), validates it with JSON Schema, and stores it in MongoDB in two forms:
 - **Embedded `classes`** collection with full `features_by_level`
 - **Normalized `features`** collection with stable slugs + indexes
 
@@ -49,6 +49,10 @@ dnd-srd-mongo/
 │     ├─ ci.yml                         # Manual/legacy CI (reference)
 │     ├─ issues.yml                     # Logs new issues to run summary
 │     └─ validate.yml                   # Main validation + artifacts pipeline
+├─ app/
+│  ├─ __init__.py                       # FastAPI app factory (creates app + includes router)
+│  ├─ main.py                           # FastAPI entrypoint (`app = create_app()`) for ASGI servers
+│  └─ routes.py                         # Read-only SRD endpoints: meta/classes + Mongo-backed feature routes (optional)
 ├─ assets/
 │  ├─ crest.png                         # README header (square)
 │  ├─ crest_social.png                  # 1280×640 social preview
@@ -73,16 +77,22 @@ dnd-srd-mongo/
 │        ├─ fighter.json
 │        └─ wizard.json
 ├─ schemas/
-│  └─ srd-class-5e-2014.json            # JSON Schema (validation)
+│  ├─ srd-class-5e-2014.json            # JSON Schema (validation)
+│  └─ srd-spell-5e-2014.json            # JSON Schema (validation)
 ├─ scripts/
+│  ├─ db.py                             # Canonical MongoDB connection helpers (URI/env, ping, safe DB resolution)
 │  ├─ feature_validator.mongo.js        # Strict collection validator
 │  ├─ indexes.mongo.js                  # Canonical indexes
 │  ├─ ingest_srd.py                     # Idempotent ETL/ingest
 │  ├─ read_helpers.py                   # Tiny read layer (example queries)
 │  └─ __init__.py
 ├─ tests/
+│  ├─ test_api_grounding.py
+│  ├─ test_atlas_smoke.py
+│  ├─ test_cache_guardrails.py
 │  ├─ test_read_helpers.py
 │  ├─ test_smoke.py
+│  ├─ test_spell_schema.py
 │  └─ test_validator.py
 ├─ .env.example                         # Example env vars (local)
 ├─ .gitignore
