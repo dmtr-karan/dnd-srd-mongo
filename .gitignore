@@ -10,7 +10,6 @@ venv/
 *.conda
 *.egg-info/
 .env
-.env.*
 
 
 # Conda lock / temp files

@@ -19,14 +19,14 @@
 
 ## ✨ What this is
 
-A small, focused project that ingests **D&D 5e SRD class data**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
+A small, focused project that ingests **selected D&D 5e SRD class data**, validates it with **JSON Schema**, and stores it in **MongoDB** in two forms:
 
 * **Embedded `classes`** collection with full `features_by_level`
 * **Normalized `features`** collection with stable slugs + indexes
 
 It also emits **deterministic cache JSONs** for simple reads and ships a tiny **read helper layer** plus tests.
 
-The scope is intentionally small and easy to explain and extend.
+The scope is intentionally limited: validate SRD-safe class data, load it into MongoDB, and expose deterministic read paths.
 
 ---
 
@@ -152,7 +152,7 @@ Available endpoints:
 
 The cache-backed routes such as `/meta` and `/classes` work without MongoDB. The feature routes depend on a reachable MongoDB instance and return `503` when Mongo is not configured.
 
-### 1. Environment
+### Environment
 
 Using the existing virtual environment:
 
@@ -176,7 +176,7 @@ conda env create -f environment.yml
 conda activate srd-mongo
 ```
 
-### 1b. Environment variables
+### Environment variables
 
 This repo reads the Mongo connection string from the **environment variable** `MONGODB_URI`.
 
@@ -196,7 +196,7 @@ source .env
 set +a
 ```
 
-### 2. Start MongoDB locally
+### Start MongoDB locally
 
 Start a local MongoDB instance that is reachable at `localhost:27017`, or point `MONGODB_URI` at another host.
 
@@ -208,20 +208,20 @@ A typical local launch is:
 mongod --dbpath /path/to/your/data
 ```
 
-### 3. Apply indexes + validator
+### Apply indexes + validator
 
 ```bash
 mongosh "$MONGODB_URI" scripts/indexes.mongo.js
 mongosh "$MONGODB_URI" scripts/feature_validator.mongo.js
 ```
 
-### 4. Ingest SRD data
+### Ingest SRD data
 
 ```bash
 ./.venv/bin/python scripts/ingest_srd.py
 ```
 
-### 5. Run tests
+### Run tests
 
 ```bash
 ./.venv/bin/python -m pytest -q

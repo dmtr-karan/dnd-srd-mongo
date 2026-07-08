@@ -4,9 +4,12 @@ dependencies:
   - python=3.10
   - pip
   - pip:
-      - pymongo
-      - jsonschema
-      - pytest
+      - pymongo[srv]>=4.6
+      - jsonschema>=4.22
+      - pytest>=8.0
+      - fastapi>=0.110
+      - uvicorn[standard]>=0.27
+      - httpx>=0.25
       # Optional dev tools (uncomment if you want them):
       # - black
       # - ruff
