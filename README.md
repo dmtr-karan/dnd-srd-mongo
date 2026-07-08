@@ -128,7 +128,7 @@ This project demonstrates two complementary MongoDB schema approaches for the sa
 
 ## 🚀 Quickstart
 
-### 0. Optional: Run the SRD Grounding API (read-only)
+### Optional: Run the SRD Grounding API (read-only)
 
 This repo also ships a small **read-only FastAPI service** for deterministic SRD grounding.
 
